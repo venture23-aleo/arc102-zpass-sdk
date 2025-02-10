@@ -1,3 +1,5 @@
+import { v5 as uuid } from "uuid";
+
 export type NormalizedRecord = Record<
   string,
   {
@@ -24,15 +26,29 @@ export class DataFormatter {
     }
   }
   // Flatten and normalize the data
-  static normalize(data: Record<string, unknown>): NormalizedRecord {
-    const flattened: Record<string, any> = {};
-    this.flatten(data, flattened);
-
+  static normalize(
+    data: Record<string, string | number | boolean>,
+    password?: string
+  ): NormalizedRecord {
     const result: NormalizedRecord = {};
-    for (const key in flattened) {
+
+    // Generate namespace from password
+    const namespace = password ? uuid(password, uuid.URL) : crypto.randomUUID();
+    for (const key in data) {
+      if (
+        typeof data[key] != "string" &&
+        typeof data[key] != "number" &&
+        typeof data[key] != "boolean"
+      ) {
+        throw new Error(
+          `Undefined value ${data[key]} for key ${key}. Only string, number and booleans are supported.`
+        );
+      }
+
+      const salt = uuid(key, namespace);
       result[key] = {
-        salt: "0x12345",
-        value: flattened[key],
+        salt,
+        value: data[key],
       };
     }
     return result;
