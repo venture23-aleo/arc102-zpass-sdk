@@ -11,7 +11,8 @@
   "scripts": {
     "clean": "rm -rf dist",
     "lint": "eslint src/**/*.ts",
-    "build": "npm run clean && npm run lint && tsc"
+    "build": "npm run clean && npm run lint && tsc",
+    "test": "mocha -r ts-node/register 'src/**/__tests__/*.test.ts'"
   },
   "keywords": [],
   "author": "",
@@ -19,9 +20,18 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@types/chai": "^5.0.1",
+    "@types/js-yaml": "^4.0.9",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.13.1",
+    "chai": "4.5.0",
     "eslint": "^9.19.0",
+    "mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.23.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
   }
 }
