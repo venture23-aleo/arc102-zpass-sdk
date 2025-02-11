@@ -1,4 +1,4 @@
-export const encodeToF = (input: string) => {
+export const encodeToField = (input: string): string => {
   // Define Fp as the modulo base
   const Fp = BigInt(
     "8444461749428370424248824938781546531375899335154063827935233455917409239041"
@@ -17,5 +17,5 @@ export const encodeToF = (input: string) => {
   // Take modulo Fp
   result %= Fp;
 
-  return result;
+  return result + "field";
 };

@@ -1,6 +1,6 @@
 import { NormalizedRecord } from "../model";
-import { encodeToF } from "../utils/encoding";
-import { hashField } from "../utils/hasher";
+import { encodeToField } from "../utils/encoding";
+import { hashField_SHA3_256_TO_U64 } from "../utils/hasher";
 
 const formatKey = (key: string, issuer: string) => {
   return `KYC${issuer}${key}`;
@@ -8,10 +8,7 @@ const formatKey = (key: string, issuer: string) => {
 
 export class DataHasher {
   static hash(data: NormalizedRecord) {
-    //const encodedRecord: Record<string, string> = {};
-
-    // @TODO check if this is the right issuer or not
-    // Validate the aleo address
+    //@TODO Validate the aleo address
     if (!data["issuer"])
       throw new Error("Issuer is missing from normalized data");
 
@@ -25,15 +22,19 @@ export class DataHasher {
 
       // Hash key to u64
       const formattedKey = formatKey(key, issuerAddress);
-      const hashedFieldKey = hashField(encodeToF(formattedKey));
+      const hashedFieldKey = hashField_SHA3_256_TO_U64(
+        encodeToField(formattedKey)
+      );
 
       const { salt, value } = data[key];
-      const hashedSalt = hashField(encodeToF(salt));
+      const hashedSalt = hashField_SHA3_256_TO_U64(encodeToField(salt));
 
-      let hashedValue = 0n;
-      if (typeof value == "string") hashedValue = hashField(encodeToF(value));
+      let hashedValue = "0u64";
+      if (typeof value == "string")
+        hashedValue = hashField_SHA3_256_TO_U64(encodeToField(value));
+      // @TODO handle floating point value
       else if (typeof value == "number" || typeof value == "boolean")
-        hashedValue = BigInt(value);
+        hashedValue = Number(value) + "u64";
       else
         throw new Error(
           `Unsupported type for ${value}, expected string, boolean or number`
