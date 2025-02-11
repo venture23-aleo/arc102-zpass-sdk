@@ -1,10 +1,11 @@
 import { expect } from "chai";
 import { DataFormatter } from "../data-formatter";
 import { TEST_INPUT_DATA } from "./test-input";
+import { FlattenedRecord } from "../../model";
 
 describe("Data Formatter", () => {
   it("Should flatten the nested object", async () => {
-    const result = {};
+    const result: FlattenedRecord = {};
     DataFormatter.flatten(TEST_INPUT_DATA, result);
     expect(result).deep.equal({
       name: "John Doe",

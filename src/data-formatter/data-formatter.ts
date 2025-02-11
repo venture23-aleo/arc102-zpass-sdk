@@ -1,18 +1,11 @@
 import { v5 as uuid } from "uuid";
-
-export type NormalizedRecord = Record<
-  string,
-  {
-    salt: string;
-    value: string | number | boolean;
-  }
->;
+import { FlattenedRecord, NormalizedRecord } from "../model";
 
 export class DataFormatter {
   static flatten(
     // eslint-disable-next-line
     data: Record<string, any>,
-    result: Record<string, string | number | boolean>,
+    result: FlattenedRecord,
     parent?: string
   ) {
     for (const key in data) {
@@ -26,10 +19,7 @@ export class DataFormatter {
     }
   }
   // Flatten and normalize the data
-  static normalize(
-    data: Record<string, string | number | boolean>,
-    password?: string
-  ): NormalizedRecord {
+  static normalize(data: FlattenedRecord, password?: string): NormalizedRecord {
     const result: NormalizedRecord = {};
 
     // Generate namespace from password
