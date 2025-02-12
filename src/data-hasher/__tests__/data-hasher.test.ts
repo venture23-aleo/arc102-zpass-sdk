@@ -2,6 +2,7 @@ import { YAMLTransformer } from "../../data-transformer";
 import { DataFormatter } from "../../data-formatter";
 import { NormalizedRecord, FlattenedRecord } from "../../model";
 import { DataHasher } from "../data-hasher";
+import { expect } from "chai";
 
 describe("Data Hasher", () => {
   it("Should hash the nested object", async () => {
@@ -34,6 +35,13 @@ single: true
         value: flattened[key],
       };
     }
-    DataHasher.hash(normalized);
+    const leaves = DataHasher.calculateLeaves(normalized);
+    expect(leaves).deep.equals([
+      3493762364786270799n,
+      2885257838413858146n,
+      1977705045598954156n,
+      3824841577554724530n,
+      649073363538396672n,
+    ]);
   });
 });

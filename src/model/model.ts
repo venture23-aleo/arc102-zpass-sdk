@@ -1,4 +1,4 @@
-export type FlattenedRecord= Record<string, string | number | boolean>;
+export type FlattenedRecord = Record<string, string | number | boolean>;
 
 export type NormalizedRecord = Record<
   string,
@@ -7,3 +7,7 @@ export type NormalizedRecord = Record<
     value: string | number | boolean;
   }
 >;
+
+export type U64String = string;
+export type FieldString = string;
+export type U128String = string;
