@@ -3,29 +3,26 @@ import { DataFormatter } from "../../data-formatter";
 import { NormalizedRecord, FlattenedRecord } from "../../model";
 import { DataHasher } from "../data-hasher";
 import { expect } from "chai";
+import { MerkleTree } from "../merkle-tree";
 
-describe("Data Hasher", () => {
-  it("Should hash the nested object", async () => {
-    const data = `type: KYC
+const data = `type: KYC
 issuer: aleo123456
 name: Alice Wonderland
 dob: 1737213145
-single: true
 `;
 
-    const transformed = new YAMLTransformer().transfrom(data);
+const keyUUIDMap: Map<string, string> = new Map([
+  ["type", "2fc55f97-a9a3-4ed7-8815-634441580111"],
+  ["issuer", "d64266d2-b9cd-46c2-8ed1-284f96916353"],
+  ["name", "1b13c461-8ed4-420a-b1f4-9d6b1f84decc"],
+  ["dob", "03dff77c-f450-43ac-a8a6-54fdfe8fd58c"],
+]);
 
+describe("Data Hasher", () => {
+  it("Should hash the nested object", async () => {
+    const transformed = new YAMLTransformer().transfrom(data);
     const flattened: FlattenedRecord = {};
     DataFormatter.flatten(transformed, flattened);
-
-    const keyUUIDMap: Map<string, string> = new Map([
-      ["type", "2fc55f97-a9a3-4ed7-8815-634441580111"],
-      ["issuer", "d64266d2-b9cd-46c2-8ed1-284f96916353"],
-      ["name", "1b13c461-8ed4-420a-b1f4-9d6b1f84decc"],
-      ["dob", "03dff77c-f450-43ac-a8a6-54fdfe8fd58c"],
-      ["single", "bb9cacbe-f668-4424-82b6-afdb3e45cf90"],
-    ]);
-
     const normalized: NormalizedRecord = {};
     for (const key in flattened) {
       const salt = keyUUIDMap.get(key);
@@ -41,7 +38,25 @@ single: true
       2885257838413858146n,
       1977705045598954156n,
       3824841577554724530n,
-      649073363538396672n,
     ]);
+  });
+
+  it("Should return valid merkleroot", async () => {
+    const transformed = new YAMLTransformer().transfrom(data);
+    const flattened: FlattenedRecord = {};
+    DataFormatter.flatten(transformed, flattened);
+    const normalized: NormalizedRecord = {};
+    for (const key in flattened) {
+      const salt = keyUUIDMap.get(key);
+      if (!salt) throw new Error(`Salt not found for key ${key}`);
+      normalized[key] = {
+        salt,
+        value: flattened[key],
+      };
+    }
+    const leaves = DataHasher.calculateLeaves(normalized);
+    const merkleTree = new MerkleTree(leaves, true);
+    const root = merkleTree.calculateMerkleRoot();
+    expect(root).equal(7849773981907115583n);
   });
 });

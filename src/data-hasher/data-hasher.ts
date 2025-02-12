@@ -1,5 +1,5 @@
 import { NormalizedRecord } from "../model";
-import { u64ToBigInt } from "../utils/conversion";
+import { isFloat, u64ToBigInt } from "../utils/conversion";
 import { encodeToField } from "../utils/encoding";
 import { hashField_SHA3_256_TO_U64, hashMerge } from "../utils/hasher";
 
@@ -36,7 +36,11 @@ export class DataHasher {
       let encodedValue;
       if (typeof value == "string") {
         encodedValue = encodeToField(value);
-      } else if (typeof value == "number" || typeof value == "boolean") {
+      } else if (typeof value == "number") {
+        if (isFloat(value) || value < 0)
+          throw new Error("Value as float is unsupported for hashing");
+        encodedValue = Number(value) + "field";
+      } else if (typeof value == "boolean") {
         // @TODO handle floating point value
         encodedValue = Number(value) + "field";
       } else {
@@ -44,6 +48,7 @@ export class DataHasher {
           `Unsupported type for ${value}, expected string, boolean or number`
         );
       }
+
       const hashedValue = hashField_SHA3_256_TO_U64(encodedValue);
 
       const leaf = hashMerge(hashedKey, hashMerge(hashedSalt, hashedValue));
