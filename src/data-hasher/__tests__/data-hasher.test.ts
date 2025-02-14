@@ -43,8 +43,10 @@ describe("Data Hasher", () => {
 
   it("Should return valid merkleroot", async () => {
     const transformed = new YAMLTransformer().transfrom(data);
+
     const flattened: FlattenedRecord = {};
     DataFormatter.flatten(transformed, flattened);
+
     const normalized: NormalizedRecord = {};
     for (const key in flattened) {
       const salt = keyUUIDMap.get(key);
@@ -54,9 +56,11 @@ describe("Data Hasher", () => {
         value: flattened[key],
       };
     }
+
     const leaves = DataHasher.calculateLeaves(normalized);
     const merkleTree = new MerkleTree(leaves, true);
     const root = merkleTree.calculateMerkleRoot();
+
     expect(root).equal(7849773981907115583n);
   });
 });

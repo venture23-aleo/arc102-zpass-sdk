@@ -37,11 +37,11 @@ export class DataHasher {
       if (typeof value == "string") {
         encodedValue = encodeToField(value);
       } else if (typeof value == "number") {
+        // @TODO handle floating point value
         if (isFloat(value) || value < 0)
-          throw new Error("Value as float is unsupported for hashing");
+          throw new Error("Value as float or negative is not supported for hashing");
         encodedValue = Number(value) + "field";
       } else if (typeof value == "boolean") {
-        // @TODO handle floating point value
         encodedValue = Number(value) + "field";
       } else {
         throw new Error(
