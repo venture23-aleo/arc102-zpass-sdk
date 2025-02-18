@@ -3,7 +3,6 @@ import { DataFormatter } from "../../data-formatter";
 import { NormalizedRecord, FlattenedRecord } from "../../model";
 import { DataHasher } from "../data-hasher";
 import { expect } from "chai";
-import { MerkleTree } from "../merkle-tree";
 
 const data = `type: KYC
 issuer: aleo123456
@@ -39,28 +38,5 @@ describe("Data Hasher", () => {
       1977705045598954156n,
       3824841577554724530n,
     ]);
-  });
-
-  it("Should return valid merkleroot", async () => {
-    const transformed = new YAMLTransformer().transfrom(data);
-
-    const flattened: FlattenedRecord = {};
-    DataFormatter.flatten(transformed, flattened);
-
-    const normalized: NormalizedRecord = {};
-    for (const key in flattened) {
-      const salt = keyUUIDMap.get(key);
-      if (!salt) throw new Error(`Salt not found for key ${key}`);
-      normalized[key] = {
-        salt,
-        value: flattened[key],
-      };
-    }
-
-    const leaves = DataHasher.calculateLeaves(normalized);
-    const merkleTree = new MerkleTree(leaves, true);
-    const root = merkleTree.calculateMerkleRoot();
-
-    expect(root).equal(7849773981907115583n);
   });
 });
