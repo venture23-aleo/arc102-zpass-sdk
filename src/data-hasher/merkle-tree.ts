@@ -1,46 +1,53 @@
-/*
-import { bigIntToU64, u64ToBigInt } from "../utils/conversion";
-import { hashMerge } from "../utils/hasher";
-*/
+import { MerkleTree as MerkleTreeJS } from 'merkletreejs'
+import { hash128, mergeU64 } from '../utils/hasher';
+import { U64String } from '../model';
+import { u64ToBigInt } from '../utils/conversion';
 
-import { hashMerge } from "../utils/hasher";
+const defaultHashFN = (data: Buffer): Buffer => {
+  const input = data.toString();
+  return Buffer.from(hash128(input));
+}
 
-export type LeafHash = string;
-export type HashFn = (left: LeafHash, right: LeafHash) => LeafHash;
+const concatenator = (inputs: Buffer[]): Buffer => {
+  if (inputs.length != 2) throw new Error(`Expected 2 arguments, got ${inputs.length}`);
+  const left = inputs[0].toString();
+  const right = inputs[1].toString();
+  return Buffer.from(mergeU64(left, right));
+}
 
+// Wrapper around the implementation of merkletreejs
 export class MerkleTree {
-  private readonly leaves: Array<LeafHash>;
-  private readonly hashFn: HashFn;
 
-  constructor(leaves: Array<LeafHash>, hashFn?: HashFn) {
-    this.leaves = leaves;
-    this.hashFn = hashFn ? hashFn : hashMerge;
+  tree: MerkleTreeJS
 
-    // if the no of leaves is odd, we duplicate the last leaves to make it even
-    if (this.leaves.length & 1)
-      this.leaves.push(this.leaves[this.leaves.length - 1]);
+  constructor(leaves: Array<U64String>, sortLeaves: boolean) {
+    if (sortLeaves)
+      leaves.sort((a: U64String, b: U64String) => u64ToBigInt(a) < u64ToBigInt(b) ? -1 : 1);
+
+    this.tree = new MerkleTreeJS(leaves, defaultHashFN, {
+      concatenator,
+    });
   }
 
-  calculateRoot(): LeafHash {
-    if (this.leaves.length == 0) throw new Error("Leaf count is zero");
-    if (this.leaves.length === 1) return this.leaves[0];
-
-    let inputs = [...this.leaves];
-
-    while (inputs.length > 1) {
-      if (inputs.length & 1) {
-        // Duplicate the last element
-        inputs.push(inputs[inputs.length - 1]);
-      }
-
-      let outputs = [];
-      for (let leaf = 0; leaf < inputs.length; leaf += 2) {
-        const left = inputs[leaf];
-        const right = inputs[leaf + 1];
-        outputs.push(this.hashFn(left, right));
-      }
-      inputs = outputs;
-    }
-    return inputs[0];
+  getRoot(): string {
+    return this.tree.getRoot().toString();
   }
+
+  _getProof(hash: U64String) {
+    return this.tree.getProof(hash);
+  }
+
+  getProof(hash: U64String): { position: 'left' | 'right', data: string }[] {
+    return this.tree.getProof(hash).map(entry => (
+      {
+        ...entry,
+        data: entry.data.toString()
+      }
+    ));
+  }
+
+  verify(proof: any[], leaf: string, root: string) {
+    return this.tree.verify(proof, leaf, root);
+  }
+
 }

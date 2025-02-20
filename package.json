@@ -34,6 +34,7 @@
   "dependencies": {
     "@doko-js/wasm": "^1.0.0",
     "js-yaml": "^4.1.0",
+    "merkletreejs": "^0.4.1",
     "uuid": "^11.0.5"
   }
 }

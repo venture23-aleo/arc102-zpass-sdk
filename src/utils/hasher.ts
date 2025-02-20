@@ -11,11 +11,15 @@ export const hash128 = (data: U128String): U64String => {
   return Hasher.hash("sha3_256", data, "u64", "testnet");
 };
 
-export const hashMerge = (left: U64String, right: U64String): U64String => {
+export const mergeU64 = (left: U64String, right: U64String): U128String => {
   const BASE = 18446744073709551617n; // 2^64+1
   const l = u64ToBigInt(left);
   const r = u64ToBigInt(right);
 
   const hashInput = l < r ? l * BASE + r : r * BASE + l;
-  return hash128(bigIntToU128(hashInput));
+  return bigIntToU128(hashInput);
 };
+
+export const hashMerge = (left: U64String, right: U64String): U64String => {
+  return hash128(mergeU64(left, right));
+}
