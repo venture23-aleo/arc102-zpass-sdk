@@ -11,13 +11,13 @@ describe("Data Formatter", () => {
       name: "John Doe",
       age: 26,
       dob: 19980809,
+      issuer: "aleo28483838383",
+      type: "KYC",
       "address,street": "123 Main St",
       "address,city": "Springfield",
       "address,state": "IL",
       "address,postalCode": "62701",
       "address,country": "USA",
-      "address,coordinates,latitude": 39.7817,
-      "address,coordinates,longitude": -89.6501,
     });
   });
 
@@ -30,6 +30,8 @@ describe("Data Formatter", () => {
       name: { salt: "4698ab18-1adf-53bf-b4db-72bd06243203", value: "John Doe" },
       age: { salt: "5e1e4eb2-ff79-555d-a579-985511069354", value: 26 },
       dob: { salt: "846abae6-6353-5373-b4f6-55ce39a49a8f", value: 19980809 },
+      issuer: { salt: "f2f0ed1b-d2ed-5f50-8b44-0afe167fd606", value: "aleo28483838383" },
+      type: { salt: "88010173-e22e-5de0-805a-adc75093c918", value: "KYC" },
       "address,street": {
         salt: "affa5215-237b-55a6-a273-7a4a36f19ad6",
         value: "123 Main St",
@@ -49,14 +51,6 @@ describe("Data Formatter", () => {
       "address,country": {
         salt: "cbbb090f-e6c5-594a-ab86-88b13f84fc72",
         value: "USA",
-      },
-      "address,coordinates,latitude": {
-        salt: "7d113c8d-de02-52a1-937e-6771adb77c41",
-        value: 39.7817,
-      },
-      "address,coordinates,longitude": {
-        salt: "676853b7-3229-5f35-b88e-f51d0cf7f9ef",
-        value: -89.6501,
       },
     });
   });

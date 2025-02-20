@@ -1,4 +1,6 @@
 export const TEST_INPUT_DATA = {
+  type: "KYC",
+  issuer: "aleo28483838383",
   name: "John Doe",
   age: 26,
   dob: 19980809,
@@ -8,9 +10,5 @@ export const TEST_INPUT_DATA = {
     state: "IL",
     postalCode: "62701",
     country: "USA",
-    coordinates: {
-      latitude: 39.7817,
-      longitude: -89.6501,
-    },
   },
 };

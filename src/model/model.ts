@@ -11,3 +11,9 @@ export type NormalizedRecord = Record<
 export type U64String = string;
 export type FieldString = string;
 export type U128String = string;
+
+export interface CertificateInfo {
+  subject: string,
+  issuer: string,
+  merkleRoot: string;
+}

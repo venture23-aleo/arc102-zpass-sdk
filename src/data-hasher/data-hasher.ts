@@ -1,4 +1,4 @@
-import { NormalizedRecord } from "../model";
+import { NormalizedRecord, U64String } from "../model";
 import { isFloat, u64ToBigInt } from "../utils/conversion";
 import { encodeToField } from "../utils/encoding";
 import { hashField_SHA3_256_TO_U64, hashMerge } from "../utils/hasher";
@@ -14,7 +14,7 @@ export class DataHasher {
       throw new Error("Issuer is missing from normalized data");
 
     const issuerAddress = data["issuer"].value as string;
-    const leaves: bigint[] = [];
+    const leaves: U64String[] = [];
 
     for (const key in data) {
       if (typeof key != "string") {
@@ -52,7 +52,7 @@ export class DataHasher {
       const hashedValue = hashField_SHA3_256_TO_U64(encodedValue);
 
       const leaf = hashMerge(hashedKey, hashMerge(hashedSalt, hashedValue));
-      leaves.push(u64ToBigInt(leaf));
+      leaves.push(leaf);
     }
     return leaves;
   }
