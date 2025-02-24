@@ -6,7 +6,7 @@ export const hashField_SHA3_256_TO_U64 = (data: FieldString): U64String => {
   return Hasher.hash("sha3_256", data, "u64", "testnet");
 };
 
-// @TODO add validation/type for u64 string
+// @TODO add validation/type for u64(leo types) string
 export const hash128 = (data: U128String): U64String => {
   return Hasher.hash("sha3_256", data, "u64", "testnet");
 };

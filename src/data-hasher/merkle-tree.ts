@@ -46,7 +46,7 @@ export class MerkleTree {
     ));
   }
 
-  verify(proof: any[], leaf: string, root: string) {
+  verify(proof: unknown[], leaf: string, root: string) {
     return this.tree.verify(proof, leaf, root);
   }
 

@@ -1,5 +1,5 @@
 import { NormalizedRecord, U64String } from "../model";
-import { isFloat, u64ToBigInt } from "../utils/conversion";
+import { isFloat } from "../utils/conversion";
 import { encodeToField } from "../utils/encoding";
 import { hashField_SHA3_256_TO_U64, hashMerge } from "../utils/hasher";
 
@@ -37,7 +37,7 @@ export class DataHasher {
       if (typeof value == "string") {
         encodedValue = encodeToField(value);
       } else if (typeof value == "number") {
-        // @TODO handle floating point value
+        // @TODO maybe need to handle later 
         if (isFloat(value) || value < 0)
           throw new Error("Value as float or negative is not supported for hashing");
         encodedValue = Number(value) + "field";
