@@ -4,19 +4,16 @@ import { MerkleTree } from "../data-hasher/merkle-tree";
 import { YAMLTransformer } from "../data-transformer";
 import { CertificateInfo, FlattenedRecord, NormalizedRecord } from "../model";
 
-export enum FileType {
-    YAML,
-    JSON
-};
+type FileType = "json" | "yaml";
 
 export class ZkCertificate {
 
     static generate(fileContent: string | Record<string, unknown>, fileType: FileType, password?: string) {
         switch (fileType) {
-            case FileType.YAML:
+            case "yaml":
                 fileContent = new YAMLTransformer().transfrom(fileContent as string)
                 break;
-            case FileType.JSON:
+            case "json":
                 break;
             default:
                 throw new Error(`Unsupported file type ${fileType}`);

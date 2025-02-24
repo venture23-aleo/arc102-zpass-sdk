@@ -38,6 +38,11 @@ export class MerkleTree {
   }
 
   getProof(hash: U64String): { position: 'left' | 'right', data: string }[] {
+    const found = this.tree.getLeaves().find((leaf) => {
+      return leaf.toString() == hash;
+    });
+    if (!found) throw new Error("Leaf is not valid and doesn't contains in the tree");
+
     return this.tree.getProof(hash).map(entry => (
       {
         ...entry,
