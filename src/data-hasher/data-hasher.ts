@@ -8,13 +8,14 @@ const formatKey = (key: string, type: string, issuer: string) => {
 };
 
 export class DataHasher {
-
-  static calculateLeafHash(key: string, salt: string, value: string | number | boolean, type: string, issuerAddress: string) {
-
-    // Hash key to u64
-    const formattedKey = formatKey(key, type, issuerAddress);
+  static getKeyIdentifier(key: string, certificateType: string, issuerAddress: string) {
+    const formattedKey = formatKey(key, certificateType, issuerAddress);
     const hashedKey = hashField_SHA3_256_TO_U64(encodeToField(formattedKey));
 
+    return hashedKey;
+  }
+
+  static calculateLeafHash(keyIdentifier: string, salt: string, value: string | number | boolean) {
     // Calculate hash for salt
     const hashedSalt = hashField_SHA3_256_TO_U64(encodeToField(salt));
 
@@ -36,7 +37,7 @@ export class DataHasher {
     }
 
     const hashedValue = hashField_SHA3_256_TO_U64(encodedValue);
-    return hashMerge(hashedKey, hashMerge(hashedSalt, hashedValue));
+    return hashMerge(keyIdentifier, hashMerge(hashedSalt, hashedValue));
   }
 
   static calculateLeaves(data: NormalizedRecord) {
@@ -50,7 +51,8 @@ export class DataHasher {
 
     for (const key in data) {
       const { salt, value } = data[key];
-      const leaf = this.calculateLeafHash(key, salt, value, type, issuerAddress);
+      const keyIdentifier = this.getKeyIdentifier(key, type, issuerAddress);
+      const leaf = this.calculateLeafHash(keyIdentifier, salt, value);
       leaves.push(leaf);
     }
     return leaves;

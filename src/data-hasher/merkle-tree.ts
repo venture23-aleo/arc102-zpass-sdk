@@ -20,20 +20,25 @@ export class MerkleTree {
 
   tree: MerkleTreeJS
 
-  constructor(leaves: Array<U64String>, sortLeaves: boolean) {
-    if (sortLeaves)
-      leaves.sort((a: U64String, b: U64String) => u64ToBigInt(a) < u64ToBigInt(b) ? -1 : 1);
-
+  constructor(leaves: Array<U64String>) {
+    leaves.sort((a: U64String, b: U64String) => u64ToBigInt(a) < u64ToBigInt(b) ? -1 : 1);
     this.tree = new MerkleTreeJS(leaves, defaultHashFN, {
       concatenator,
     });
   }
 
-  getRoot(): string {
-    return this.tree.getRoot().toString();
+  _getRoot(): Buffer {
+    return this.tree.getRoot();
   }
 
-  _getProof(hash: U64String) {
+  getRoot(): string {
+    return this._getRoot().toString();
+  }
+
+  _getProof(hash: U64String): {
+    position: "left" | "right";
+    data: Buffer;
+  }[] {
     return this.tree.getProof(hash);
   }
 

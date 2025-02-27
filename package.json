@@ -1,6 +1,6 @@
 {
-  "name": "zk-pass-sdk",
-  "version": "1.0.0",
+  "name": "arc102-zpass-sdk",
+  "version": "0.0.3-beta",
   "main": "dist/index.js",
   "files": [
     "dist/**/*"
@@ -8,16 +8,25 @@
   "exports": {
     ".": "./dist/index.js"
   },
+  "homepage": "https://github.com/venture23-aleo/arc102-zpass-sdk",
+  "repository": {
+    "url": "https://github.com/venture23-aleo/arc102-zpass-sdk"
+  },
   "scripts": {
     "clean": "rm -rf dist",
     "lint": "eslint src/**/*.ts",
     "build": "npm run clean && npm run lint && tsc",
     "test": "mocha -r ts-node/register 'src/**/__tests__/*.test.ts'"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "aleo",
+    "arc102",
+    "sdk",
+    "zpass"
+  ],
+  "author": "Venture23",
   "license": "ISC",
-  "description": "",
+  "description": "TS/JS SDK implementation for ARC-0102: https://github.com/ProvableHQ/ARCs/discussions/84",
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@types/chai": "^5.0.1",

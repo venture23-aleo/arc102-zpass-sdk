@@ -10,13 +10,13 @@ const LEAVES = [
 
 describe("MerkleTree", () => {
   it("Should return valid root for four leaves", () => {
-    const merkleTree = new MerkleTree(LEAVES, true);
+    const merkleTree = new MerkleTree(LEAVES);
     const root = merkleTree.getRoot();
     expect(root).equal("7849773981907115583u64");
   });
 
   it("Should return valid merkle proof for leaves", () => {
-    const merkleTree = new MerkleTree(LEAVES, true);
+    const merkleTree = new MerkleTree(LEAVES);
     const proof = merkleTree.getProof(LEAVES[0]);
     expect(proof).deep.equals([
       { position: 'right', data: '2885257838413858146u64' },
@@ -25,7 +25,7 @@ describe("MerkleTree", () => {
   });
 
   it("Should verify the merkle proof", () => {
-    const merkleTree = new MerkleTree(LEAVES, true);
+    const merkleTree = new MerkleTree(LEAVES);
     for (let i = 0; i < LEAVES.length; ++i) {
       const proof = merkleTree.getProof(LEAVES[i]);
       expect(merkleTree.verify(proof, LEAVES[i], '7849773981907115583u64')).equal(true);

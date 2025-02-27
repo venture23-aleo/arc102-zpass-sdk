@@ -1,2 +1,2 @@
 export * from "./certificate"
-export * from './prover'
+export * from "./data-hasher"

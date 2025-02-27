@@ -19,11 +19,11 @@ export class DataFormatter {
     }
   }
   // Flatten and normalize the data
-  static normalize(data: FlattenedRecord, password?: string): NormalizedRecord {
+  static normalize(data: FlattenedRecord, seed?: string): NormalizedRecord {
     const result: NormalizedRecord = {};
 
     // Generate namespace from password
-    const namespace = password ? uuid(password, uuid.URL) : crypto.randomUUID();
+    const namespace = seed ? uuid(seed, uuid.URL) : crypto.randomUUID();
     for (const key in data) {
       if (
         typeof data[key] != "string" &&
