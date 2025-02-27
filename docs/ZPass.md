@@ -1,8 +1,36 @@
-# Prover Class
+# ZPass Class
 
-The `Prover` class provides functionalities to work with Merkle proofs and verify certificates.
+The `ZPass` class provides functionalities to generate and retrieve information from zero-knowledge certificates.
 
 ## Methods
+
+### `generate(fileContent: string | Record<string, unknown>, fileType: FileType, password?: string)`
+Generates a certificate from the given file content and type.
+
+- **Parameters**:
+  - `fileContent`: The content of the file, either as a string or a record.
+  - `fileType`: The type of the file, either `json` or `yaml`.
+  - `password` (optional): A password for additional security.
+
+- **Returns**: A normalized record of the certificate.
+
+- **Example**:
+  ```typescript
+  const certificate = ZPass.generate(fileContent, 'json');
+  ```
+
+### `getInfo(certificate: NormalizedRecord): ZPassInfo`
+Retrieves information about the certificate, including the subject, issuer, and Merkle root.
+
+- **Parameters**:
+  - `certificate`: The normalized record of the certificate.
+
+- **Returns**: An object containing the subject, issuer, and Merkle root.
+
+- **Example**:
+  ```typescript
+  const info = ZPass.getInfo(certificate);
+  ```
 
 ### `getMerkleProof(certificate: NormalizedRecord, leaf: U64String)`
 Obtains the Merkle proof for a given leaf in the certificate.
@@ -15,7 +43,7 @@ Obtains the Merkle proof for a given leaf in the certificate.
 
 - **Example**:
   ```typescript
-  const proof = Prover.getMerkleProof(certificate, leaf);
+  const proof = ZPass.getMerkleProof(certificate, leaf);
   ```
 
 ### `calculateLeafHash(key: string, salt: string, value: string | number | boolean, type: string, issuerAddress: string)`
@@ -32,7 +60,7 @@ Calculates the hash of a leaf node.
 
 - **Example**:
   ```typescript
-  const leafHash = Prover.calculateLeafHash(key, salt, value, type, issuerAddress);
+  const leafHash = ZPass.calculateLeafHash(key, salt, value, type, issuerAddress);
   ```
 
 ### `verify(certificate: NormalizedRecord, proof: string[], leafHash: string, root: string)`
@@ -48,5 +76,5 @@ Verifies the integrity of a certificate using the provided proof and root.
 
 - **Example**:
   ```typescript
-  const isValid = Prover.verify(certificate, proof, leafHash, root);
+  const isValid = ZPass.verify(certificate, proof, leafHash, root);
   ```
